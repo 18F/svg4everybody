@@ -8,17 +8,23 @@
     function embed(node, target) {
         // if the target exists
         if (target) {
-            // create a document fragment to hold the contents of the target
-            var fragment = document.createDocumentFragment(), svg = getSVGAncestor(node), viewBox = !svg.hasAttribute("viewBox") && target.getAttribute("viewBox");
+            var svg = getSVGAncestor(node), viewBox = !svg.hasAttribute("viewBox") && target.getAttribute("viewBox");
             // conditionally set the viewBox on the svg
             viewBox && svg.setAttribute("viewBox", viewBox);
-            // copy the contents of the clone into the fragment
-            for (// clone the target
-            var clone = target.cloneNode(!0); clone.childNodes.length; ) {
-                fragment.appendChild(clone.firstChild);
+            // clone the target
+            var clone = target.cloneNode(!0);
+            if ("symbol" === target.nodeName.toLowerCase()) {
+                // copy the contents of the clone into the fragment
+                for (// create a document fragment to hold the contents of the target
+                var fragment = document.createDocumentFragment(); clone.childNodes.length; ) {
+                    fragment.appendChild(clone.firstChild);
+                }
+                // append the fragment into the svg
+                node.appendChild(fragment);
+            } else {
+                // remove the id to keep the document valid
+                clone.removeAttribute("id"), node.appendChild(clone);
             }
-            // append the fragment into the svg
-            node.appendChild(fragment);
         }
     }
     function loadreadystatechange(xhr) {
