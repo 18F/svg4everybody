@@ -8,12 +8,12 @@
     function embed(node, target) {
         // if the target exists
         if (target) {
-            var svg = getSVGAncestor(node), viewBox = !svg.hasAttribute("viewBox") && target.getAttribute("viewBox");
-            // conditionally set the viewBox on the svg
-            viewBox && svg.setAttribute("viewBox", viewBox);
-            // clone the target
+            // import the target
             var clone = target.cloneNode(!0);
             if ("symbol" === target.nodeName.toLowerCase()) {
+                var svg = getSVGAncestor(node), viewBox = !svg.hasAttribute("viewBox") && target.getAttribute("viewBox");
+                // conditionally set the viewBox on the svg
+                viewBox && svg.setAttribute("viewBox", viewBox);
                 // copy the contents of the clone into the fragment
                 for (// create a document fragment to hold the contents of the target
                 var fragment = document.createDocumentFragment(); clone.childNodes.length; ) {
