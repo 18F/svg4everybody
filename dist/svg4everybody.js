@@ -2,10 +2,7 @@
     "function" == typeof define && define.amd ? // AMD. Register as an anonymous module unless amdModuleId is set
     define([], function() {
         return root.svg4everybody = factory();
-    }) : "object" == typeof exports ? // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like environments that support module.exports,
-    // like Node.
-    module.exports = factory() : root.svg4everybody = factory();
+    }) : "object" == typeof exports ? module.exports = factory() : root.svg4everybody = factory();
 }(this, function() {
     /*! svg4everybody v2.1.0 | github.com/jonathantneal/svg4everybody */
     function embed(svg, target) {
@@ -38,7 +35,7 @@
                     // get the cached target
                     var target = xhr._cachedTarget[item.id];
                     // ensure the cached target
-                    target || (target = xhr._cachedTarget[item.id] = cachedDocument.getElementById(item.id)), 
+                    target || (target = xhr._cachedTarget[item.id] = getElementById(cachedDocument, item.id)), 
                     // embed the target into the svg
                     embed(item.svg, target);
                 });
@@ -74,7 +71,7 @@
                             loadreadystatechange(xhr);
                         } else {
                             // embed the local id into the svg
-                            embed(svg, document.getElementById(id));
+                            embed(svg, getElementById(document, id));
                         }
                     }
                 } else {
@@ -91,6 +88,15 @@
         var requests = {}, requestAnimationFrame = window.requestAnimationFrame || setTimeout, uses = document.getElementsByTagName("use");
         // conditionally start the interval if the polyfill is active
         polyfill && oninterval();
+    }
+    function getElementById(doc, id) {
+        if ("function" == typeof doc.getElementById) {
+            try {
+                return doc.getElementById(id);
+            } catch (error) {}
+        }
+        var selector = '[id="' + id.replace(/"/g, '\\"') + '"]';
+        return doc.querySelector(selector);
     }
     return svg4everybody;
 });
